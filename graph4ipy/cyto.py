@@ -137,9 +137,9 @@ class CytoJson (object):
 
       return new_node
 
-   def to_json (self):
+   def to_json (self, *args, **kwargs):
       # TODO: pretty print options?
-      return jsonutils.ExtEncoder (self._json)
+      return jsonutils.ExtEncoder (*args, **kwargs).encode (self._json)
 
 
 ### END ###

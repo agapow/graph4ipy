@@ -24,6 +24,7 @@ import IPython
 from IPython.display import HTML, display
 
 from . import utils
+from . import jsonutils
 
 __all__ = (
    'draw',
@@ -124,13 +125,14 @@ def draw (data):
    else:
       return html
 
-def draw_in_browser (data, title='graph4ipy', work_dir=None, tmp_dir=False,
+def draw_in_browser (data, styles=None, title='graph4ipy', work_dir=None, tmp_dir=False,
       file_name='graph.html'):
    """
    Generate a webpage containing the graph.
 
    Args:
-      data: object or data to be displayed in graph.
+      data: object or data to be displayed in graph
+      styles: Python (not JSON) list of style dictionaries
       title: title of webpage
       work_dir: directory for webpage to be created in
       temp_dir: create webpage in temporary directory
@@ -154,6 +156,8 @@ def draw_in_browser (data, title='graph4ipy', work_dir=None, tmp_dir=False,
 
    # obtain styles
    cyto_style_str = utils.load_asset ('default.cyto-style.json')
+   cyto_style_json = utils.load_json ('default.cyto-style.json')
+   cyto_style_str = jsonutils.to_json()
 
    # load & render page template
    page_tmpl = utils.load_template ('webpage.template.html')
