@@ -157,13 +157,20 @@ def draw_in_browser (data, styles=None, title='graph4ipy', work_dir=None, tmp_di
    # obtain styles
    cyto_style_str = utils.load_asset ('default.cyto-style.json')
    cyto_style_json = utils.load_json ('default.cyto-style.json')
-   cyto_style_str = jsonutils.to_json()
+   cyto_style_str = jsonutils.py_to_json (cyto_style_json)
+
+   # parse data
+   with open ('tests/data/genemania.json', 'r') as in_hndl:
+      elements_str = in_hndl.read()
 
    # load & render page template
    page_tmpl = utils.load_template ('webpage.template.html')
    rendered_page = page_tmpl.substitute ({
       'title': title,
       'cyto_style': cyto_style_str,
+      'element_data': elements_str,
+      'jquery_tag': consts.JQUERY_TAG,
+      'cyto_tag': consts.CYTO_TAG
    })
 
    # write out resultant page

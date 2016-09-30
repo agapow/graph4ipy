@@ -22,6 +22,7 @@ import json
 __all__ = (
     'JsonLiteral',
     'ExtEncoder',
+    'py_to_json'
 
 )
 
@@ -45,6 +46,10 @@ class ExtEncoder (json.JSONEncoder):
       else:
          # otherwise baseclass
          return json.JSONEncoder.default (self, obj)
+
+
+def py_to_json (data, *args, **kwargs):
+   return ExtEncoder (*args, **kwargs).encode (data)
 
 
 ### END ###

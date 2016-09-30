@@ -41,6 +41,9 @@ NONDATA_KEYS = (
 ### CODE ###
 
 class CytoJson (object):
+   # TODO: track, internally map nodes/edges/styles with map of ids/selectors
+   # TODO: properties to the various bits
+
    def __init__ (self, container):
       # XXX: how to stop container line from being escaped?
       self._json = {
@@ -139,7 +142,7 @@ class CytoJson (object):
 
    def to_json (self, *args, **kwargs):
       # TODO: pretty print options?
-      return jsonutils.ExtEncoder (*args, **kwargs).encode (self._json)
+      return jsonutils.py_to_json (*args, **kwargs)
 
 
 ### END ###
