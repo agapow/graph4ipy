@@ -5,7 +5,7 @@ setup(
    name="graph4ipy",
    version=__version__,
    description="Display graphs from the IPython notebook.",
-   url="http://www.agapow.net/software/graph4py",
+   url="http://www.agapow.net/software/graph4ipy",
    license="MIT",
    author="Paul Agapow",
    author_email="paul@agapow.net",
@@ -25,9 +25,9 @@ setup(
    #    ]
    # },
    include_package_data=True,
-   packages=["graph4py"],
+   packages=["graph4ipy"],
    install_requires=[
-      "ipython",
+      'future',
       #"tornado",
    ],
    entry_points={

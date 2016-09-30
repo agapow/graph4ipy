@@ -1,6 +1,9 @@
 """
-Converters  & writers for various formats.
+Working with cytoscape.js data.
 """
+
+# TODO: load from Python
+# TODO: load from JSON
 
 ### IMPORTS
 

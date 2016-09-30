@@ -13,13 +13,17 @@ from future import standard_library
 standard_library.install_aliases()
 
 import os
+from os import path
 import uuid
+import webbrowser
 # exposed by future
 from urllib.parse import urljoin
 from urllib.request import pathname2url
 
 import IPython
 from IPython.display import HTML, display
+
+from . import utils
 
 __all__ = (
    'draw',
@@ -32,30 +36,7 @@ __all__ = (
 IPYTHON_VERSION = IPython.release.version
 
 
-
-file_path = os.path.normpath (os.path.dirname (__file__))
-local_path = 'nbextensions/imolecule.min.js'
-remote_path = ('https://rawgit.com/patrickfuller/imolecule/master/'
-            'imolecule/js/build/imolecule.min.js')
-
 ### CODE ###
-
-# always executed
-# code flinched from imolecule
-if IPYTHON_VERSION < '2.0':
-   raise ImportError ("Old version of IPython detected. Please update.")
-else:
-   try:
-      if IPYTHON_VERSION < '4.0':
-         from IPython.html.nbextensions import install_nbextension
-      else:
-         from notebook.nbextensions import install_nbextension
-         # TODO: look this up
-      p = os.path.join (file_path, 'assets', PATH_TO_JS_AND_CSS)
-      install_nbextension ([p] if IPYTHON_VERSION < '3.0' else p, verbose=0)
-   except:
-      pass
-
 
 def draw (data):
    """
@@ -121,7 +102,7 @@ def draw (data):
 
          tempdir = mkdtemp(prefix='imolecule_{:.0f}_'.format(time()))
 
-         html_filename = os.path.join(tempdir, 'index.html')
+         html_filename = path.join (tempdir, 'index.html')
          with open(html_filename, 'wb') as f:
             f.write(html)
 
@@ -131,7 +112,7 @@ def draw (data):
                ('server', 'js', 'chosen.jquery.min.js'),
                ('js', 'build', 'imolecule.min.js'))
          for lib in libs:
-            shutil.copy(os.path.join(file_path, *lib), tempdir)
+            shutil.copy (path.join(file_path, *lib), tempdir)
 
          html_file_url = urljoin('file:', pathname2url(html_filename))
 
@@ -143,8 +124,55 @@ def draw (data):
    else:
       return html
 
-def draw_in_browser (data):
-   pass
+def draw_in_browser (data, title='graph4ipy', work_dir=None, tmp_dir=False,
+      file_name='graph.html'):
+   """
+   Generate a webpage containing the graph.
+
+   Args:
+      data: object or data to be displayed in graph.
+      title: title of webpage
+      work_dir: directory for webpage to be created in
+      temp_dir: create webpage in temporary directory
+      file_name: name of generated webpage
+
+   """
+   ## Preconditions & preparation:
+   assert not (work_dir) and not (tmp_dir), \
+      "can supply at most one of work_dir and tmp_dir"
+   if tmp_dir:
+      work_dir = tempfile.mkdtemp ('graph4ipy')
+   else:
+      if work_dir is None:
+         work_dir = '.'
+
+   ## Main:
+   # TODO: allow creation in temp dir
+   # TODO: allow self_contained (included files)
+   # TODO: copy assets files
+   # TODO: allow naming of target file
+
+   # obtain styles
+   cyto_style_str = utils.load_asset ('default.cyto-style.json')
+
+   # load & render page template
+   page_tmpl = utils.load_template ('webpage.template.html')
+   rendered_page = page_tmpl.substitute ({
+      'title': title,
+      'cyto_style': cyto_style_str,
+   })
+
+   # write out resultant page
+   target_page = path.abspath (path.join (work_dir, file_name))
+   with open (target_page, 'w') as out_hndl:
+      out_hndl.write (rendered_page)
+
+   # open in browser
+   page_url = urljoin ('file:', pathname2url (target_page))
+   webbrowser.open (page_url)
+
+
+
 
 
 ### END ###

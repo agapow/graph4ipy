@@ -11,15 +11,15 @@ from __future__ import division
 from future import standard_library
 standard_library.install_aliases()
 
-from .drawgraph import *
+from .render import *
 from .ipy import *
+from . import consts
 
 
 ### CONSTANTS & DEFINES
 
 __version__ = '0.1'
 __author__ = 'Paul Agapow'
-__license__ = 'MIT'
 
 
 ### END ###
