@@ -34,13 +34,24 @@ class JgfReader (object):
          return self.parse_multigraph (json_obj)
       if 'graphs' in json_keys:
          return self.parse_multigraph (json_obj)
-         
-   def parse_multigraph (self, json_obj):
-      pass
 
+   def parse_multigraph (self, json_obj):
+      graphs = [self.parse_graph (g) for g in json_obj['graphs']]
+      return MultiGraph (
+         graphs=graphs,
+         mgraph_type=json_obj.get ('type', None),
+         label==json_obj.get ('label', None),
+         **json_obj.get ('metadata', {})
+      )
 
    def parse_singlegraph (self, json_obj):
-      pass
+      graph = [self.parse_graph (g) for g in json_obj['graph']]
+      return MultiGraph (
+         graph=graph,
+         graph_type=json_obj.get ('type', None),
+         label==json_obj.get ('label', None),
+         **json_obj.get ('metadata', {})
+      )
 
    def parse_graph (self, json_obj):
       pass
