@@ -1,5 +1,5 @@
 """
-Working with cytoscape.js data.
+Working with JSON Graph Format data.
 """
 
 # TODO: load from Python
@@ -18,7 +18,7 @@ from builtins import object
 from . import jsonutils
 
 __all__ = (
-   'CytoJson',
+   'JgfJson',
 )
 
 
@@ -40,7 +40,36 @@ NONDATA_KEYS = (
 
 ### CODE ###
 
-class CytoJson (object):
+class SubDict (dict):
+   """
+   A dictionary that stores some fields at top level, some in a sub-dictionary.
+
+   Some of the graph formats features data that is a map, but with only a
+   certain set, fixed set of fields at the toplevel. Other fields are banished
+   to a contained dictionary with a fixed name. With
+   """
+   subdict = 'metadata'
+   topfields = ['foo', 'bar']
+
+   def __init__ (self, *args, **kwargs):
+      self._subdict = self[subdict] = {}
+
+   def __getitem__ (self, k):
+      if k in topfields:
+
+      else:
+         
+
+
+
+class JgfGraph (object):
+   """
+   Encapsulating a JGF-format graph.
+
+   This allows the building and manipulation of a graph, and its emmission in
+   JGF format. Internally, it is stored in a Python structure similar to the
+   matching JSON.
+   """
    # TODO: track, internally map nodes/edges/styles with map of ids/selectors
    # TODO: properties to the various bits
 
@@ -158,10 +187,9 @@ class CytoJson (object):
 
       return new_node
 
-
    def to_json (self, *args, **kwargs):
       # TODO: pretty print options?
-      return jsonutils.py_to_json (self, *args, **kwargs)
+      return jsonutils.py_to_json (*args, **kwargs)
 
 
 ### END ###
